@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive LP Demo</title>
+    <style>
+        /* --- 全域變數與重置 --- */
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --primary-color: #00d2be; /* SWAG 風格綠 */
+            --accent-color: #ff4081;  /* 粉紅按鈕色 */
+            --text-white: #ffffff;
+            --text-black: #000000;
+            --text-gray: #b0b0b0;
+            --border-color: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-white);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- 手機版面容器 --- */
+        .app-container {
+            width: 100%;
+            max-width: 480px; /* 限制最大寬度模擬手機 */
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #333;
+            border-right: 1px solid #333;
+        }
+
+        /* --- 1. Top Tab 區域 (修改顏色) --- */
+        .top-tabs {
+            display: flex;
+            justify-content: space-around;
+            background-color: var(--primary-color); /* 改為 SWAG 綠 */
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab-link {
+            color: var(--text-black); /* 背景變亮，文字改黑 */
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800; /* 加粗 */
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .tab-link:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- 2. Video 影片區域 --- */
+        .video-stage {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 比例 */
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .video-stage video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 音量開關按鈕 */
+        .mute-toggle {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* --- 3. Command 指令區域 --- */
+        .command-section {
+            padding: 0; /* 調整 padding 給餘額條使用 */
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* 新增：鑽石餘額顯示條 */
+        .balance-bar {
+            background-color: #2a2a2a;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+
+        .balance-title {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .menu-container {
+            padding: 15px;
+        }
+
+        /* 主分類按鈕 */
+        .category-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .cat-btn {
+            flex: 1;
+            padding: 10px 5px;
+            background: linear-gradient(135deg, #2c3e50, #000);
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: transform 0.1s;
+        }
+        
+        .cat-btn.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(0, 210, 190, 0.3);
+            color: var(--primary-color);
+        }
+
+        .cat-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* 子指令按鈕列表 */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 兩欄 */
+            gap: 10px;
+        }
+
+        .action-btn {
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            background-color: #2a2a2a;
+            border-color: var(--primary-color);
+        }
+
+        /* 新增：餘額不足時的樣式 */
+        .action-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            filter: grayscale(1);
+            border-color: #333 !important;
+        }
+
+        .action-name {
+            display: block;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .action-cost {
+            display: block;
+            font-size: 12px;
+            color: var(--primary-color);
+        }
+
+        .action-btn.disabled .action-cost {
+            color: #888;
+        }
+
+        /* --- 4. Profile 個人資料區域 --- */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            margin-top: 10px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .profile-info p {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        /* --- 5. Iframe 直播牆區域 --- */
+        .iframe-container {
+            flex: 1; /* 佔滿剩餘高度 */
+            width: 100%;
+            min-height: 300px;
+            background-color: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--primary-color);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- 1. Top Tabs (顏色已改) -->
+    <nav class="top-tabs">
+        <a href="https://swag.live/livestream" class="tab-link">熱門直播</a>
+        <a href="https://swag.live/video" class="tab-link">素人影片</a>
+        <a href="https://swag.live/shorts/" class="tab-link">免費短片</a>
+    </nav>
+
+    <!-- 2. Video Stage -->
+    <div class="video-stage">
+        <div class="loader" id="videoLoader">Loading...</div>
+        <video id="mainVideo" playsinline autoplay muted loop>
+            <source src="" type="video/mp4">
+            您的瀏覽器不支援 HTML5 影片。
+        </video>
+        <button class="mute-toggle" id="muteBtn">開啟聲音 🔈</button>
+    </div>
+
+    <!-- 3. Command Section -->
+    <div class="command-section">
+        
+        <!-- 新增：餘額顯示區 -->
+        <div class="balance-bar">
+            <span class="balance-title">我的錢包</span>
+            <span class="balance-amount">💎 <span id="diamondDisplay">800</span></span>
+        </div>
+
+        <div class="menu-container">
+            <!-- Level 1: Categories -->
+            <div class="category-menu" id="categoryMenu">
+                <button class="cat-btn active" onclick="switchCategory('menu')">🕹️ 互動菜單</button>
+                <button class="cat-btn" onclick="switchCategory('gift')">🎁 贈送禮物</button>
+                <button class="cat-btn" onclick="switchCategory('private')">🎭 私密邀請</button>
+            </div>
+
+            <!-- Level 2: Actions -->
+            <div class="action-grid" id="actionContainer">
+                <!-- JS 會動態生成內容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Profile Section -->
+    <div class="profile-section">
+        <div class="avatar">
+            <img src="https://via.placeholder.com/100" alt="Avatar">
+        </div>
+        <div class="profile-info">
+            <h3 id="streamerName">主播暱稱</h3>
+            <p id="streamerBio">歡迎來到我的直播間，點擊上方按鈕與我互動！</p>
+        </div>
+    </div>
+
+    <!-- 5. Iframe Section -->
+    <div class="iframe-container">
+        <iframe src="https://showcase.swag.live/livestream?feed=user_livestream-global-filtered&filters=preset%3Apreview&sorts=desc%3Aviewers&refresh=30&snapshot=1" title="Livestream Room"></iframe>
+    </div>
+</div>
+
+<script>
+    // ==========================================
+    //  資料設定區 (CONFIGURATION)
+    // ==========================================
+    
+    const DEFAULT_VIDEO = "https://www.w3schools.com/html/mov_bbb.mp4"; 
+    
+    // 初始化鑽石數量
+    let userDiamonds = 800;
+
+    // 修改資料結構：新增 price (數字) 用於計算，顯示時自動加上 "鑽石"
+    const commandData = {
+        "menu": [
+            { name: "跳舞", price: 300, video: "https://www.w3schools.com/html/movie.mp4" },
+            { name: "抖奶", price: 500, video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+            { name: "震動跳蛋", price: 800, video: "https://www.w3schools.com/html/mov_bbb.mp4" },
+            { name: "噴水", price: 1000, video: "https://www.w3schools.com/html/movie.mp4" }
+        ],
+        "gift": [
+            { name: "兔耳朵", price: 69, video: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+            { name: "性感丁字褲", price: 699, video: "https://www.w3schools.com/html/mov_bbb.mp4" }
+        ],
+        "private": [
+            { name: "一對多私密直播", price: 1000, link: "https://swag.live/livestream" },
+            { name: "一對一私密直播", price: 2000, link: "https://swag.live/livestream" }
+        ]
+    };
+
+    // ==========================================
+    //  程式邏輯區 (LOGIC)
+    // ==========================================
+    
+    const videoPlayer = document.getElementById('mainVideo');
+    const actionContainer = document.getElementById('actionContainer');
+    const muteBtn = document.getElementById('muteBtn');
+    const diamondDisplay = document.getElementById('diamondDisplay');
+    let currentCategory = 'menu'; 
+
+    function init() {
+        videoPlayer.src = DEFAULT_VIDEO;
+        updateBalanceUI(); // 初始化顯示餘額
+        renderActions('menu');
+        
+        muteBtn.addEventListener('click', () => {
+            if(videoPlayer.muted) {
+                videoPlayer.muted = false;
+                muteBtn.textContent = "關閉聲音 🔊";
+            } else {
+                videoPlayer.muted = true;
+                muteBtn.textContent = "開啟聲音 🔈";
+            }
+        });
+    }
+
+    // 更新鑽石顯示介面
+    function updateBalanceUI() {
+        diamondDisplay.textContent = userDiamonds.toLocaleString(); // 加入千分位逗號
+    }
+
+    window.switchCategory = function(category) {
+        currentCategory = category;
+        
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.getAttribute('onclick').includes(category)) {
+                btn.classList.add('active');
+            }
+        });
+
+        renderActions(category);
+    }
+
+    function renderActions(category) {
+        const items = commandData[category];
+        actionContainer.innerHTML = ''; 
+
+        items.forEach(item => {
+            const btn = document.createElement('div');
+            
+            // 判斷是否買得起
+            const isAffordable = userDiamonds >= item.price;
+            
+            // 設定樣式
+            let classes = 'action-btn';
+            if (!isAffordable) {
+                classes += ' disabled'; // 餘額不足樣式
+            }
+            btn.className = classes;
+
+            // 點擊事件處理
+            btn.onclick = () => handleActionClick(item, isAffordable);
+
+            btn.innerHTML = `
+                <span class="action-name">${item.name}</span>
+                <span class="action-cost">${item.price.toLocaleString()} 鑽石</span>
+            `;
+            actionContainer.appendChild(btn);
+        });
+    }
+
+    // 處理按鈕點擊與扣款邏輯
+    function handleActionClick(item, isAffordable) {
+        if (!isAffordable) {
+            alert(`鑽石不足！還差 ${item.price - userDiamonds} 鑽石`);
+            return;
+        }
+
+        // 確認扣款
+        if(confirm(`確定要花費 ${item.price} 鑽石執行「${item.name}」嗎？`)) {
+            // 1. 扣除鑽石
+            userDiamonds -= item.price;
+            
+            // 2. 更新介面 (餘額與按鈕狀態)
+            updateBalanceUI();
+            renderActions(currentCategory); // 重新渲染按鈕以更新 disabled 狀態
+
+            // 3. 執行動作 (影片或連結)
+            if (item.video) {
+                playCommandVideo(item.video);
+            } else if (item.link) {
+                window.location.href = item.link;
+            }
+        }
+    }
+
+    function playCommandVideo(url) {
+        console.log("Playing video:", url);
+        videoPlayer.src = url;
+        videoPlayer.play().catch(e => console.log("Play error:", e));
+    }
+
+    init();
+
+</script>
+
+</body>
+</html>
