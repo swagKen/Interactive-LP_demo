@@ -43,20 +43,20 @@
             border-right: 1px solid #333;
         }
 
-        /* --- 1. Top Tab 區域 (修改顏色) --- */
+        /* --- 1. Top Tab 區域 --- */
         .top-tabs {
             display: flex;
             justify-content: space-around;
-            background-color: var(--primary-color); /* 改為 SWAG 綠 */
+            background-color: var(--primary-color);
             padding: 12px 0;
             border-bottom: 1px solid var(--border-color);
         }
 
         .tab-link {
-            color: var(--text-black); /* 背景變亮，文字改黑 */
+            color: var(--text-black);
             text-decoration: none;
             font-size: 14px;
-            font-weight: 800; /* 加粗 */
+            font-weight: 800;
             padding: 8px 12px;
             border-radius: 4px;
             transition: background 0.2s;
@@ -101,12 +101,12 @@
 
         /* --- 3. Command 指令區域 --- */
         .command-section {
-            padding: 0; /* 調整 padding 給餘額條使用 */
+            padding: 0;
             background-color: var(--bg-color);
             border-bottom: 1px solid var(--border-color);
         }
 
-        /* 新增：鑽石餘額顯示條 */
+        /* 鑽石餘額顯示條 */
         .balance-bar {
             background-color: #2a2a2a;
             padding: 10px 15px;
@@ -173,7 +173,7 @@
         /* 子指令按鈕列表 */
         .action-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* 兩欄 */
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
 
@@ -193,12 +193,13 @@
             border-color: var(--primary-color);
         }
 
-        /* 新增：餘額不足時的樣式 */
+        /* 餘額不足時的樣式：完全無法點擊 */
         .action-btn.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            filter: grayscale(1);
+            opacity: 0.3;          /* 變得更淡 */
+            filter: grayscale(1);  /* 變黑白 */
             border-color: #333 !important;
+            pointer-events: none;  /* 關鍵：滑鼠事件完全失效 */
+            cursor: default;
         }
 
         .action-name {
@@ -255,7 +256,7 @@
 
         /* --- 5. Iframe 直播牆區域 --- */
         .iframe-container {
-            flex: 1; /* 佔滿剩餘高度 */
+            flex: 1;
             width: 100%;
             min-height: 300px;
             background-color: #000;
@@ -281,7 +282,7 @@
 <body>
 
 <div class="app-container">
-    <!-- 1. Top Tabs (顏色已改) -->
+    <!-- 1. Top Tabs -->
     <nav class="top-tabs">
         <a href="https://swag.live/livestream" class="tab-link">熱門直播</a>
         <a href="https://swag.live/video" class="tab-link">素人影片</a>
@@ -301,7 +302,7 @@
     <!-- 3. Command Section -->
     <div class="command-section">
         
-        <!-- 新增：餘額顯示區 -->
+        <!-- 餘額顯示區 -->
         <div class="balance-bar">
             <span class="balance-title">鑽石餘額</span>
             <span class="balance-amount">💎 <span id="diamondDisplay">800</span></span>
@@ -344,12 +345,12 @@
     //  資料設定區 (CONFIGURATION)
     // ==========================================
     
+    // 預設循環影片
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     
     // 初始化鑽石數量
     let userDiamonds = 800;
 
-    // 修改資料結構：新增 price (數字) 用於計算，顯示時自動加上 "鑽石"
     const commandData = {
         "menu": [
             { name: "搖屁股", price: 300, video: "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326042/%E6%90%96%E5%B1%81%E8%82%A1_pruovu.mp4" },
@@ -379,7 +380,7 @@
 
     function init() {
         videoPlayer.src = DEFAULT_VIDEO;
-        updateBalanceUI(); // 初始化顯示餘額
+        updateBalanceUI(); 
         renderActions('menu');
         
         muteBtn.addEventListener('click', () => {
@@ -395,7 +396,7 @@
 
     // 更新鑽石顯示介面
     function updateBalanceUI() {
-        diamondDisplay.textContent = userDiamonds.toLocaleString(); // 加入千分位逗號
+        diamondDisplay.textContent = userDiamonds.toLocaleString();
     }
 
     window.switchCategory = function(category) {
@@ -424,7 +425,8 @@
             // 設定樣式
             let classes = 'action-btn';
             if (!isAffordable) {
-                classes += ' disabled'; // 餘額不足樣式
+                // 如果錢不夠，加上 disabled class，CSS 裡設定了 pointer-events: none
+                classes += ' disabled'; 
             }
             btn.className = classes;
 
@@ -441,26 +443,23 @@
 
     // 處理按鈕點擊與扣款邏輯
     function handleActionClick(item, isAffordable) {
+        // 如果錢不夠，CSS pointer-events 應該會擋住，但這裡做二次防護
         if (!isAffordable) {
-            alert(`鑽石不足！還差 ${item.price - userDiamonds} 鑽石`);
             return;
         }
 
-        // 確認扣款
-        if(confirm(`確定要花費 ${item.price} 鑽石執行「${item.name}」嗎？`)) {
-            // 1. 扣除鑽石
-            userDiamonds -= item.price;
-            
-            // 2. 更新介面 (餘額與按鈕狀態)
-            updateBalanceUI();
-            renderActions(currentCategory); // 重新渲染按鈕以更新 disabled 狀態
+        // 1. 直接扣款 (無確認視窗)
+        userDiamonds -= item.price;
+        
+        // 2. 更新介面
+        updateBalanceUI();
+        renderActions(currentCategory); // 重新渲染，錢不夠的按鈕會自動變灰
 
-            // 3. 執行動作 (影片或連結)
-            if (item.video) {
-                playCommandVideo(item.video);
-            } else if (item.link) {
-                window.location.href = item.link;
-            }
+        // 3. 執行動作 (影片或連結)
+        if (item.video) {
+            playCommandVideo(item.video);
+        } else if (item.link) {
+            window.location.href = item.link;
         }
     }
 
