@@ -41,6 +41,7 @@
             flex-direction: column;
             border-left: 1px solid #333;
             border-right: 1px solid #333;
+            position: relative; /* 用於定位 Modal */
         }
 
         /* --- 1. Top Tab 區域 --- */
@@ -193,13 +194,25 @@
             border-color: var(--primary-color);
         }
 
-        /* 餘額不足時的樣式：完全無法點擊 */
+        /* 餘額不足時的樣式 */
         .action-btn.disabled {
-            opacity: 0.3;          /* 變得更淡 */
-            filter: grayscale(1);  /* 變黑白 */
+            opacity: 0.5;          /* 稍微透明，但不要太淡，讓文字可見 */
+            filter: grayscale(0.8); /* 稍微保留一點顏色 */
             border-color: #333 !important;
-            pointer-events: none;  /* 關鍵：滑鼠事件完全失效 */
-            cursor: default;
+            
+            /* 修改：允許點擊，這樣才能觸發 CTA 彈窗 */
+            pointer-events: auto;  
+            cursor: pointer;
+        }
+        
+        /* 餘額不足時加上一個鎖頭圖示或其他標示 (可選) */
+        .action-btn.disabled::after {
+            content: "🔒";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 12px;
+            opacity: 0.7;
         }
 
         .action-name {
@@ -216,7 +229,7 @@
         }
 
         .action-btn.disabled .action-cost {
-            color: #888;
+            color: #d15b5b; /* 餘額不足顯示紅色 */
         }
 
         /* --- 4. Profile 個人資料區域 --- */
@@ -227,6 +240,12 @@
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
             margin-top: 10px;
+            cursor: pointer; /* 讓滑鼠變成手指形狀 */
+            transition: background 0.2s;
+        }
+
+        .profile-section:hover {
+            background-color: #252525;
         }
 
         .avatar {
@@ -247,6 +266,11 @@
         .profile-info h3 {
             font-size: 16px;
             margin-bottom: 4px;
+            color: var(--text-white);
+        }
+        
+        .profile-info h3 span {
+            color: var(--primary-color); /* 勾勾或強調色 */
         }
 
         .profile-info p {
@@ -275,6 +299,74 @@
             left: 50%;
             transform: translate(-50%, -50%);
             color: var(--primary-color);
+        }
+
+        /* --- 6. CTA Modal (儲值彈窗) --- */
+        .modal-overlay {
+            display: none; /* 預設隱藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-box {
+            background: #2a2a2a;
+            width: 85%;
+            max-width: 320px;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-white);
+            margin-bottom: 10px;
+        }
+
+        .modal-desc {
+            color: var(--text-gray);
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .modal-btn-primary {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: #000;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .modal-btn-close {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 5px;
         }
 
     </style>
@@ -323,20 +415,35 @@
         </div>
     </div>
 
-    <!-- 4. Profile Section -->
-    <div class="profile-section">
+    <!-- 4. Profile Section (修改：加入連結跳轉) -->
+    <!-- 點擊整個區塊都會跳轉 -->
+    <div class="profile-section" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
         <div class="avatar">
             <img src="https://res.cloudinary.com/dlg6ct7jj/image/upload/v1764327454/picture_utcrso.jpg" alt="Avatar">
         </div>
         <div class="profile-info">
-            <h3 id="streamerName">kimmy_ilove</h3>
-            <p id="streamerBio">💚全錄播💚 💦保證全平台讓你澀的綠播💦 💎吃飯約會三顆閃亮鑽石💎</p>
+            <!-- 修改名稱為 kimmy_ilove -->
+            <h3 id="streamerName">kimmy_ilove <span>✅</span></h3>
+            <p id="streamerBio">成人🔞歡樂時光主題樂園</p>
         </div>
     </div>
 
     <!-- 5. Iframe Section -->
     <div class="iframe-container">
         <iframe src="https://showcase.swag.live/livestream?feed=user_livestream-global-filtered&filters=preset%3Apreview&sorts=desc%3Aviewers&refresh=30&snapshot=1" title="Livestream Room"></iframe>
+    </div>
+</div>
+
+<!-- 新增：餘額不足 CTA 彈窗 -->
+<div class="modal-overlay" id="rechargeModal">
+    <div class="modal-box">
+        <div class="modal-title">💎 鑽石餘額不足</div>
+        <p class="modal-desc">
+            立即儲值，解鎖更多精彩互動！
+        </p>
+        <!-- 這裡放儲值連結，可自行修改 href -->
+        <a href="https://swag.live" class="modal-btn-primary" target="_blank">💰 立即儲值觀看</a>
+        <button class="modal-btn-close" onclick="closeModal()">稍後再說</button>
     </div>
 </div>
 
@@ -348,7 +455,7 @@
     // 預設循環影片
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     
-    // 初始化鑽石數量
+    // 初始化鑽石數量 (測試用，您可以改成 0 來測試彈窗)
     let userDiamonds = 800;
 
     const commandData = {
@@ -376,6 +483,7 @@
     const actionContainer = document.getElementById('actionContainer');
     const muteBtn = document.getElementById('muteBtn');
     const diamondDisplay = document.getElementById('diamondDisplay');
+    const rechargeModal = document.getElementById('rechargeModal');
     let currentCategory = 'menu'; 
 
     function init() {
@@ -386,10 +494,10 @@
         muteBtn.addEventListener('click', () => {
             if(videoPlayer.muted) {
                 videoPlayer.muted = false;
-                muteBtn.textContent = "關閉聲音 🔊";
+                muteBtn.textContent = "關閉 🔊";
             } else {
                 videoPlayer.muted = true;
-                muteBtn.textContent = "開啟聲音 🔈";
+                muteBtn.textContent = "開啟 🔈";
             }
         });
     }
@@ -425,7 +533,7 @@
             // 設定樣式
             let classes = 'action-btn';
             if (!isAffordable) {
-                // 如果錢不夠，加上 disabled class，CSS 裡設定了 pointer-events: none
+                // 如果錢不夠，加上 disabled class，但可以點擊(觸發彈窗)
                 classes += ' disabled'; 
             }
             btn.className = classes;
@@ -441,21 +549,20 @@
         });
     }
 
-    // 處理按鈕點擊與扣款邏輯
+    // 處理按鈕點擊
     function handleActionClick(item, isAffordable) {
-        // 如果錢不夠，CSS pointer-events 應該會擋住，但這裡做二次防護
+        // 1. 如果錢不夠，彈出儲值視窗 (CTA)
         if (!isAffordable) {
+            openModal();
             return;
         }
 
-        // 1. 直接扣款 (無確認視窗)
+        // 2. 錢夠，直接扣款執行
         userDiamonds -= item.price;
-        
-        // 2. 更新介面
         updateBalanceUI();
-        renderActions(currentCategory); // 重新渲染，錢不夠的按鈕會自動變灰
+        renderActions(currentCategory); 
 
-        // 3. 執行動作 (影片或連結)
+        // 3. 執行動作
         if (item.video) {
             playCommandVideo(item.video);
         } else if (item.link) {
@@ -468,6 +575,20 @@
         videoPlayer.src = url;
         videoPlayer.play().catch(e => console.log("Play error:", e));
     }
+
+    // --- Modal 控制函式 ---
+    function openModal() {
+        rechargeModal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        rechargeModal.style.display = 'none';
+    }
+
+    // 點擊遮罩背景也可關閉
+    rechargeModal.addEventListener('click', (e) => {
+        if(e.target === rechargeModal) closeModal();
+    });
 
     init();
 
