@@ -100,11 +100,57 @@
             z-index: 10;
         }
 
-        /* --- 3. Command 指令區域 --- */
+        /* --- 3. Profile 個人資料區域 --- */
+        .profile-section {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--card-bg); /* 維持卡片背景 */
+            border-bottom: 1px solid var(--border-color);
+            /* 上方不需要 margin，緊貼影片或給一點點間距視需求而定，這裡保留原樣 */
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .profile-section:hover {
+            background-color: #252525;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 15px;
+            overflow: hidden;
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-info h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: var(--text-white);
+        }
+        
+        .profile-info h3 span {
+            color: var(--primary-color); 
+        }
+
+        .profile-info p {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        /* --- 4. Command 指令區域 --- */
         .command-section {
             padding: 0;
             background-color: var(--bg-color);
-            border-bottom: 1px solid var(--border-color);
+            /* border-bottom: 1px solid var(--border-color); */ /* 移除底部線條避免與下方標題重疊 */
         }
 
         /* 鑽石餘額顯示條 */
@@ -115,6 +161,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #333;
+            border-top: 1px solid #333; /* 增加上方線條區隔 Profile */
         }
 
         .balance-title {
@@ -196,16 +243,13 @@
 
         /* 餘額不足時的樣式 */
         .action-btn.disabled {
-            opacity: 0.5;          /* 稍微透明，但不要太淡，讓文字可見 */
-            filter: grayscale(0.8); /* 稍微保留一點顏色 */
+            opacity: 0.5;
+            filter: grayscale(0.8);
             border-color: #333 !important;
-            
-            /* 修改：允許點擊，這樣才能觸發 CTA 彈窗 */
             pointer-events: auto;  
             cursor: pointer;
         }
         
-        /* 餘額不足時加上一個鎖頭圖示或其他標示 (可選) */
         .action-btn.disabled::after {
             content: "🔒";
             position: absolute;
@@ -232,64 +276,34 @@
             color: #d15b5b; /* 餘額不足顯示紅色 */
         }
 
-        /* --- 4. Profile 個人資料區域 --- */
-        .profile-section {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            background-color: var(--card-bg);
-            border-bottom: 1px solid var(--border-color);
-            margin-top: 10px;
-            cursor: pointer; /* 讓滑鼠變成手指形狀 */
-            transition: background 0.2s;
-        }
-
-        .profile-section:hover {
-            background-color: #252525;
-        }
-
-        .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #555;
-            margin-right: 15px;
-            overflow: hidden;
-        }
-        
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .profile-info h3 {
-            font-size: 16px;
-            margin-bottom: 4px;
-            color: var(--text-white);
-        }
-        
-        .profile-info h3 span {
-            color: var(--primary-color); /* 勾勾或強調色 */
-        }
-
-        .profile-info p {
-            font-size: 13px;
-            color: var(--text-gray);
-        }
-
         /* --- 5. Iframe 直播牆區域 --- */
         .iframe-container {
             flex: 1;
             width: 100%;
             min-height: 300px;
             background-color: #000;
+            display: flex;
+            flex-direction: column; 
+        }
+
+        .section-header {
+            background-color: #2a2a2a;
+            padding: 10px 15px;
+            border-bottom: 1px solid #333;
+            border-top: 1px solid #333;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-white);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         iframe {
             width: 100%;
             height: 100%;
             border: none;
+            flex: 1; 
         }
         
         .loader {
@@ -303,7 +317,7 @@
 
         /* --- 6. CTA Modal (儲值彈窗) --- */
         .modal-overlay {
-            display: none; /* 預設隱藏 */
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -391,7 +405,18 @@
         <button class="mute-toggle" id="muteBtn">🔈</button>
     </div>
 
-    <!-- 3. Command Section -->
+    <!-- 3. Profile Section (位置已更換到這裡) -->
+    <div class="profile-section" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
+        <div class="avatar">
+            <img src="https://res.cloudinary.com/dlg6ct7jj/image/upload/v1764327454/picture_utcrso.jpg" alt="Avatar">
+        </div>
+        <div class="profile-info">
+            <h3 id="streamerName">kimmy_ilove <span>✅</span></h3>
+            <p id="streamerBio">成人🔞歡樂時光主題樂園</p>
+        </div>
+    </div>
+
+    <!-- 4. Command Section (位置已更換到這裡) -->
     <div class="command-section">
         
         <!-- 餘額顯示區 -->
@@ -415,34 +440,24 @@
         </div>
     </div>
 
-    <!-- 4. Profile Section (修改：加入連結跳轉) -->
-    <!-- 點擊整個區塊都會跳轉 -->
-    <div class="profile-section" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
-        <div class="avatar">
-            <img src="https://res.cloudinary.com/dlg6ct7jj/image/upload/v1764327454/picture_utcrso.jpg" alt="Avatar">
-        </div>
-        <div class="profile-info">
-            <!-- 修改名稱為 kimmy_ilove -->
-            <h3 id="streamerName">kimmy_ilove <span>✅</span></h3>
-            <p id="streamerBio">成人🔞歡樂時光主題樂園</p>
-        </div>
-    </div>
-
     <!-- 5. Iframe Section -->
     <div class="iframe-container">
+        <!-- 標題 -->
+        <div class="section-header">
+            熱門直播
+        </div>
         <iframe src="https://showcase.swag.live/livestream?feed=user_livestream-global-filtered&filters=preset%3Apreview&sorts=desc%3Aviewers&refresh=30&snapshot=1" title="Livestream Room"></iframe>
     </div>
 </div>
 
-<!-- 新增：餘額不足 CTA 彈窗 -->
+<!-- CTA Modal (儲值彈窗) -->
 <div class="modal-overlay" id="rechargeModal">
     <div class="modal-box">
         <div class="modal-title">💎 鑽石餘額不足</div>
         <p class="modal-desc">
             立即儲值，解鎖更多精彩互動！
         </p>
-        <!-- 這裡放儲值連結，可自行修改 href -->
-        <a href="https://swag.live" class="modal-btn-primary" target="_blank">💰 立即儲值觀看</a>
+        <a href="https://swag.live" class="modal-btn-primary" target="_blank">💰 儲值優惠</a>
         <button class="modal-btn-close" onclick="closeModal()">稍後再說</button>
     </div>
 </div>
@@ -452,10 +467,9 @@
     //  資料設定區 (CONFIGURATION)
     // ==========================================
     
-    // 預設循環影片
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     
-    // 初始化鑽石數量 (測試用，您可以改成 0 來測試彈窗)
+    // 初始化鑽石數量
     let userDiamonds = 800;
 
     const commandData = {
@@ -502,21 +516,18 @@
         });
     }
 
-    // 更新鑽石顯示介面
     function updateBalanceUI() {
         diamondDisplay.textContent = userDiamonds.toLocaleString();
     }
 
     window.switchCategory = function(category) {
         currentCategory = category;
-        
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.classList.remove('active');
             if(btn.getAttribute('onclick').includes(category)) {
                 btn.classList.add('active');
             }
         });
-
         renderActions(category);
     }
 
@@ -526,19 +537,10 @@
 
         items.forEach(item => {
             const btn = document.createElement('div');
-            
-            // 判斷是否買得起
             const isAffordable = userDiamonds >= item.price;
-            
-            // 設定樣式
             let classes = 'action-btn';
-            if (!isAffordable) {
-                // 如果錢不夠，加上 disabled class，但可以點擊(觸發彈窗)
-                classes += ' disabled'; 
-            }
+            if (!isAffordable) classes += ' disabled'; 
             btn.className = classes;
-
-            // 點擊事件處理
             btn.onclick = () => handleActionClick(item, isAffordable);
 
             btn.innerHTML = `
@@ -549,20 +551,15 @@
         });
     }
 
-    // 處理按鈕點擊
     function handleActionClick(item, isAffordable) {
-        // 1. 如果錢不夠，彈出儲值視窗 (CTA)
         if (!isAffordable) {
             openModal();
             return;
         }
-
-        // 2. 錢夠，直接扣款執行
         userDiamonds -= item.price;
         updateBalanceUI();
         renderActions(currentCategory); 
 
-        // 3. 執行動作
         if (item.video) {
             playCommandVideo(item.video);
         } else if (item.link) {
@@ -576,7 +573,6 @@
         videoPlayer.play().catch(e => console.log("Play error:", e));
     }
 
-    // --- Modal 控制函式 ---
     function openModal() {
         rechargeModal.style.display = 'flex';
     }
@@ -585,7 +581,6 @@
         rechargeModal.style.display = 'none';
     }
 
-    // 點擊遮罩背景也可關閉
     rechargeModal.addEventListener('click', (e) => {
         if(e.target === rechargeModal) closeModal();
     });
