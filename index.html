@@ -722,8 +722,9 @@
             btn.onclick = () => handleActionClick(item, isAffordable);
 
             btn.innerHTML = `
-                <div style="display:flex; flex-direction:column">
-                    <span class="action-name">${item.name}</span> <span class="action-cost">💎 ${item.price.toLocaleString()}</span>
+                <div style="display:flex; flex-direction:row; align-items:center; gap:8px;">
+                    <span class="action-name">${item.name}</span>
+                    <span class="action-cost">💎 ${item.price.toLocaleString()}</span>
                 </div>
             `;
             actionContainer.appendChild(btn);
