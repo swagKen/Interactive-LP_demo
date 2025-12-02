@@ -505,7 +505,7 @@
             <div class="streamer-text">
                 <span class="streamer-name">kimmy_ilove</span>
                 <!-- 新增：主播鑽石數 (HTML ID) -->
-                <span class="streamer-diamonds">💎 <span id="streamerDiamondDisplay">19,999</span></span>
+                <span class="streamer-diamonds">💎 <span id="streamerDiamondDisplay">56,198</span></span>
             </div>
             <button class="follow-btn">+ 追蹤</button>
             <div class="live-badge">LIVE</div>
@@ -521,7 +521,7 @@
                 <div class="letter-avatar" style="background:#ffcc00">A</div>
             </div>
             <!-- 新增 ID 方便 JS 更新 -->
-            <span class="viewer-num" id="viewerCountDisplay">12,504</span>
+            <span class="viewer-num" id="viewerCountDisplay">120</span>
         </div>
         <a href="https://swag.live" class="close-btn">✕</a>
     </div>
@@ -537,9 +537,9 @@
         </div>
 
         <div class="category-scroll">
-            <button class="cat-btn active" onclick="switchCategory('menu')">🕹️ 互動</button>
-            <button class="cat-btn" onclick="switchCategory('gift')">🎁 禮物</button>
-            <button class="cat-btn" onclick="switchCategory('private')">🎭 私密</button>
+            <button class="cat-btn active" onclick="switchCategory('menu')">🕹️ 挑逗互動</button>
+            <button class="cat-btn" onclick="switchCategory('gift')">🎁 贈送禮物</button>
+            <button class="cat-btn" onclick="switchCategory('private')">🎭 私密表演</button>
         </div>
 
         <div class="action-grid" id="actionContainer">
@@ -566,8 +566,8 @@
     // ==========================================
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     let userDiamonds = 800;
-    let streamerDiamonds = 19999; 
-    let viewerCount = 12504; // 初始觀眾數
+    let streamerDiamonds = 56,198; 
+    let viewerCount = 120; // 初始觀眾數
 
     const commandData = {
         "menu": [
@@ -594,6 +594,7 @@
         { name: "Henry", msg: "已斗內！" }, { name: "Teresa", msg: "主播晚上好" },
         { name: "小明", msg: "這腿我可以" }, { name: "Shawn", msg: "聲音好甜" }, 
         { name: "Matt", msg: "好色喔" }, { name: "Sam", msg: "聲音好甜" }
+        { name: "AJ", msg: "給你錢趕快脫" }, { name: "Jeff", msg: "要射了" }
     ];
 
     const mainVideo = document.getElementById('mainVideo');
