@@ -56,7 +56,6 @@
             justify-content: center;
         }
 
-        /* 背景模糊影片 */
         #bgVideo {
             position: absolute;
             top: 0;
@@ -69,7 +68,6 @@
             transform: scale(1.2);
         }
 
-        /* 主影片 */
         #mainVideo {
             position: relative;
             width: 100%;
@@ -79,7 +77,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.5);
         }
 
-        /* 漸層遮罩 */
         .video-overlay-gradient {
             position: absolute;
             top: 0;
@@ -104,7 +101,7 @@
 
         /* --- 2. 頂部介面區域 --- */
         
-        /* 左上角：主播資訊 (位置改為 top: 30px 往下移) */
+        /* 左上角：主播資訊 */
         .streamer-info-container {
             position: absolute;
             top: 30px; 
@@ -187,7 +184,7 @@
             100% { opacity: 1; }
         }
 
-        /* 右上角群組：觀眾資訊 + 關閉按鈕 (位置改為 top: 30px 平行) */
+        /* 右上角群組 */
         .top-right-group {
             position: absolute;
             top: 30px; 
@@ -228,18 +225,13 @@
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(0,0,0,0.2);
-            margin-left: -10px; /* 堆疊效果 */
+            margin-left: -10px;
             text-shadow: 0 1px 1px rgba(0,0,0,0.3);
         }
         .letter-avatar:first-child { margin-left: 0; }
 
-        .viewer-num {
-            font-size: 12px;
-            font-weight: bold;
-            color: #fff;
-        }
+        .viewer-num { font-size: 12px; font-weight: bold; color: #fff; }
 
-        /* 關閉按鈕 */
         .close-btn {
             width: 36px;
             height: 36px;
@@ -256,14 +248,14 @@
             cursor: pointer;
         }
 
-        /* --- 4. 右側功能列 (無文字版) --- */
+        /* --- 4. 右側功能列 --- */
         .right-sidebar {
             position: absolute;
             right: 15px;
-            bottom: 50px;
+            bottom: 40px;
             display: flex;
             flex-direction: column;
-            gap: 15px; /* 縮小間距因為沒有文字了 */
+            gap: 12px;
             z-index: 20;
             align-items: center;
         }
@@ -283,8 +275,8 @@
         .side-btn:active { transform: scale(0.9); }
 
         .icon-circle {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             background-color: rgba(0,0,0,0.4);
             backdrop-filter: blur(4px);
             border-radius: 50%;
@@ -296,8 +288,8 @@
         }
         
         .side-btn svg {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             fill: white;
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
         }
@@ -307,7 +299,7 @@
             position: absolute;
             bottom: 20px; 
             left: 15px;
-            width: 65%;
+            width: 70%;
             height: 200px;
             overflow-y: auto;
             z-index: 10;
@@ -319,23 +311,45 @@
         }
         .chat-container::-webkit-scrollbar { display: none; }
 
-        .chat-msg {
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 4px 10px;
+        .chat-row {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .chat-avatar-img {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: #555;
+            color: #fff;
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .chat-bubble {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
             border-radius: 12px;
-            margin-bottom: 6px;
+            border-top-left-radius: 2px;
             font-size: 13px;
             color: #fff;
-            width: fit-content;
             max-width: 100%;
             text-shadow: 0 1px 1px rgba(0,0,0,0.8);
-            animation: slideIn 0.3s ease-out;
             line-height: 1.4;
         }
+
         @keyframes slideIn { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        .user-level { background-color: #ffcc00; color: #000; font-size: 9px; padding: 1px 4px; border-radius: 3px; margin-right: 5px; font-weight: 800; vertical-align: middle;}
-        .username { color: rgba(255,255,255,0.7); margin-right: 4px; font-weight: 600; font-size: 12px;}
+        .username { color: rgba(255,255,255,0.7); font-weight: 600; font-size: 12px; margin-right: 4px; }
         .msg-content { color: #fff; }
         .sys-msg { color: var(--primary-color); font-weight: bold; }
 
@@ -355,6 +369,8 @@
             margin-bottom: 12px;
             padding: 0 5px;
         }
+        .balance-title { font-size:14px; color:#ffffff; font-weight:bold; }
+
         .balance-amount {
             font-size: 18px;
             font-weight: 800;
@@ -377,7 +393,7 @@
         .cat-btn {
             background: #2a2a2a;
             border: 1px solid #3d3d3d;
-            color: #888;
+            color: #ffffff;
             padding: 6px 16px;
             border-radius: 20px;
             font-size: 13px;
@@ -448,10 +464,13 @@
         <div class="video-bottom-gradient"></div>
         
         <div class="chat-container" id="chatContainer">
-            <div class="chat-msg"><span class="sys-msg">歡迎來到 kimmy_ilove 直播間！</span></div>
+            <!-- 系統訊息 -->
+            <div class="chat-row">
+                <div class="chat-bubble"><span class="sys-msg">歡迎來到 kimmy_ilove 直播間！</span></div>
+            </div>
         </div>
 
-        <!-- 右側懸浮功能列 (無文字) -->
+        <!-- 右側懸浮功能列 -->
         <div class="right-sidebar">
             <a href="https://swag.live/user/6598ea338c318119164a5352" class="side-btn">
                 <div class="icon-circle">
@@ -477,7 +496,7 @@
         </div>
     </div>
 
-    <!-- 2. 左上角：主播資訊 (往下移動) -->
+    <!-- 2. 左上角：主播資訊 -->
     <div class="streamer-info-container">
         <div class="streamer-pill" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
             <div class="streamer-avatar">
@@ -485,36 +504,31 @@
             </div>
             <div class="streamer-text">
                 <span class="streamer-name">kimmy_ilove</span>
-                <!-- 新增：鑽石數量 -->
-                <span class="streamer-diamonds">💎19,999</span>
+                <!-- 新增：主播鑽石數 (HTML ID) -->
+                <span class="streamer-diamonds">💎 <span id="streamerDiamondDisplay">19,999</span></span>
             </div>
-            <!-- 追蹤按鈕 (前) -->
             <button class="follow-btn">+ 追蹤</button>
-            <!-- LIVE 標籤 (後) -->
             <div class="live-badge">LIVE</div>
         </div>
     </div>
 
-    <!-- 3. 右上角：觀眾資訊 + 關閉按鈕 (平行移動) -->
+    <!-- 3. 右上角：觀眾資訊 -->
     <div class="top-right-group">
-        <!-- 觀眾膠囊 -->
         <div class="viewer-pill">
             <div class="viewer-avatars">
-                <!-- 字母頭像 -->
                 <div class="letter-avatar" style="background:#ff2d55">K</div>
                 <div class="letter-avatar" style="background:#00d2be">J</div>
                 <div class="letter-avatar" style="background:#ffcc00">A</div>
             </div>
             <span class="viewer-num">12,504</span>
         </div>
-        <!-- 關閉按鈕 -->
         <a href="https://swag.live" class="close-btn">✕</a>
     </div>
 
     <!-- 4. 底部控制面板 -->
     <div class="control-panel">
         <div class="balance-bar">
-            <div style="font-size:14px; color:#aaa; font-weight:bold;">互動指令</div>
+            <div class="balance-title">互動指令</div>
             <div class="balance-amount">
                 💎 <span id="diamondDisplay">800</span>
                 <div class="add-btn" onclick="openModal()">+</div>
@@ -551,6 +565,7 @@
     // ==========================================
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     let userDiamonds = 800;
+    let streamerDiamonds = 19999; // 初始主播鑽石數
 
     const commandData = {
         "menu": [
@@ -583,6 +598,7 @@
     const bgVideo = document.getElementById('bgVideo');
     const actionContainer = document.getElementById('actionContainer');
     const diamondDisplay = document.getElementById('diamondDisplay');
+    const streamerDiamondDisplay = document.getElementById('streamerDiamondDisplay'); // 取得主播鑽石元素
     const rechargeModal = document.getElementById('rechargeModal');
     const chatContainer = document.getElementById('chatContainer');
     const soundBtn = document.getElementById('soundBtn');
@@ -595,7 +611,8 @@
         bgVideo.src = DEFAULT_VIDEO;
         syncVideos();
 
-        updateBalanceUI(); 
+        updateBalanceUI();
+        updateStreamerBalanceUI(); // 初始化主播鑽石
         renderActions('menu');
         startFakeChat();
         
@@ -623,6 +640,11 @@
 
     function updateBalanceUI() {
         diamondDisplay.textContent = userDiamonds.toLocaleString();
+    }
+
+    // 新增：更新主播鑽石顯示
+    function updateStreamerBalanceUI() {
+        streamerDiamondDisplay.textContent = streamerDiamonds.toLocaleString();
     }
 
     window.switchCategory = function(category) {
@@ -661,8 +683,16 @@
             openModal();
             return;
         }
+        
+        // 用戶扣款
         userDiamonds -= item.price;
+        // 主播增加
+        streamerDiamonds += item.price;
+
+        // 更新雙方介面
         updateBalanceUI();
+        updateStreamerBalanceUI();
+        
         renderActions(currentCategory); 
         addChatMessage("系統", `您送出了 ${item.name}！主播很開心 ❤️`, true);
 
@@ -697,16 +727,28 @@
         }, 3000);
     }
 
+    // 隨機顏色
+    const avatarColors = ['#ff2d55', '#00d2be', '#ffcc00', '#bd10e0', '#50e3c2', '#4a90e2', '#7ed321'];
+
     function addChatMessage(name, msg, isSystem = false) {
         const div = document.createElement('div');
-        div.className = 'chat-msg';
+        div.className = 'chat-row'; 
+        
         if (isSystem) {
-            div.innerHTML = `<span class="sys-msg">${msg}</span>`;
-            div.style.border = "1px solid #00d2be";
+            div.innerHTML = `<div class="chat-bubble" style="border:1px solid #00d2be"><span class="sys-msg">${msg}</span></div>`;
         } else {
-            const level = Math.floor(Math.random() * 10) + 1;
-            div.innerHTML = `<span class="user-level">LV.${level}</span> <span class="username">${name}:</span> <span class="msg-content">${msg}</span>`;
+            const firstLetter = name.charAt(0).toUpperCase();
+            const color = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+            
+            div.innerHTML = `
+                <div class="chat-avatar-img" style="background-color:${color}">${firstLetter}</div>
+                <div class="chat-bubble">
+                    <span class="username">${name}:</span>
+                    <span class="msg-content">${msg}</span>
+                </div>
+            `;
         }
+        
         chatContainer.appendChild(div);
         chatContainer.scrollTop = chatContainer.scrollHeight;
         if (chatContainer.children.length > 50) chatContainer.removeChild(chatContainer.firstChild);
