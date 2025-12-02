@@ -12,7 +12,7 @@
             --live-red: #ff2d55;      /* 直播紅 */
             --text-white: #ffffff;
             --text-gray: #b9b9b9;
-            --diamond-green: #00d2be;  /* 鑽石綠 */
+            --diamond-gold: #00d2be;  /* 鑽石金 */
         }
 
         * {
@@ -520,7 +520,8 @@
                 <div class="letter-avatar" style="background:#00d2be">J</div>
                 <div class="letter-avatar" style="background:#ffcc00">A</div>
             </div>
-            <span class="viewer-num">12,504</span>
+            <!-- 新增 ID 方便 JS 更新 -->
+            <span class="viewer-num" id="viewerCountDisplay">12,504</span>
         </div>
         <a href="https://swag.live" class="close-btn">✕</a>
     </div>
@@ -536,9 +537,9 @@
         </div>
 
         <div class="category-scroll">
-            <button class="cat-btn active" onclick="switchCategory('menu')">🕹️ 挑逗表演</button>
-            <button class="cat-btn" onclick="switchCategory('gift')">🎁 贈送禮物</button>
-            <button class="cat-btn" onclick="switchCategory('private')">🎭 私密表演</button>
+            <button class="cat-btn active" onclick="switchCategory('menu')">🕹️ 互動</button>
+            <button class="cat-btn" onclick="switchCategory('gift')">🎁 禮物</button>
+            <button class="cat-btn" onclick="switchCategory('private')">🎭 私密</button>
         </div>
 
         <div class="action-grid" id="actionContainer">
@@ -565,7 +566,8 @@
     // ==========================================
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     let userDiamonds = 800;
-    let streamerDiamonds = 19999; // 初始主播鑽石數
+    let streamerDiamonds = 19999; 
+    let viewerCount = 12504; // 初始觀眾數
 
     const commandData = {
         "menu": [
@@ -598,7 +600,8 @@
     const bgVideo = document.getElementById('bgVideo');
     const actionContainer = document.getElementById('actionContainer');
     const diamondDisplay = document.getElementById('diamondDisplay');
-    const streamerDiamondDisplay = document.getElementById('streamerDiamondDisplay'); // 取得主播鑽石元素
+    const streamerDiamondDisplay = document.getElementById('streamerDiamondDisplay'); 
+    const viewerCountDisplay = document.getElementById('viewerCountDisplay'); // 取得觀眾數元素
     const rechargeModal = document.getElementById('rechargeModal');
     const chatContainer = document.getElementById('chatContainer');
     const soundBtn = document.getElementById('soundBtn');
@@ -612,9 +615,12 @@
         syncVideos();
 
         updateBalanceUI();
-        updateStreamerBalanceUI(); // 初始化主播鑽石
+        updateStreamerBalanceUI();
         renderActions('menu');
+        
         startFakeChat();
+        startViewerCountSimulation(); // 啟動觀眾模擬
+        startStreamerDiamondSimulation(); // 啟動鑽石模擬
         
         soundBtn.addEventListener('click', toggleSound);
     }
@@ -642,9 +648,37 @@
         diamondDisplay.textContent = userDiamonds.toLocaleString();
     }
 
-    // 新增：更新主播鑽石顯示
     function updateStreamerBalanceUI() {
         streamerDiamondDisplay.textContent = streamerDiamonds.toLocaleString();
+    }
+
+    // --- 新增：觀眾人數模擬邏輯 ---
+    function startViewerCountSimulation() {
+        setInterval(() => {
+            // 隨機增加或減少 5-10 人
+            const change = Math.floor(Math.random() * 6) + 5; 
+            const isGrowth = Math.random() > 0.5; // 50% 機率增減
+            
+            if (isGrowth) {
+                viewerCount += change;
+            } else {
+                viewerCount -= change;
+            }
+            
+            // 更新介面
+            viewerCountDisplay.textContent = viewerCount.toLocaleString();
+        }, 2000); // 每 2 秒
+    }
+
+    // --- 新增：主播鑽石模擬邏輯 ---
+    function startStreamerDiamondSimulation() {
+        setInterval(() => {
+            const amounts = [100, 300, 500];
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            
+            streamerDiamonds += amount;
+            updateStreamerBalanceUI();
+        }, 5000); // 每 5 秒
     }
 
     window.switchCategory = function(category) {
@@ -684,12 +718,9 @@
             return;
         }
         
-        // 用戶扣款
         userDiamonds -= item.price;
-        // 主播增加
         streamerDiamonds += item.price;
 
-        // 更新雙方介面
         updateBalanceUI();
         updateStreamerBalanceUI();
         
@@ -727,7 +758,6 @@
         }, 3000);
     }
 
-    // 隨機顏色
     const avatarColors = ['#ff2d55', '#00d2be', '#ffcc00', '#bd10e0', '#50e3c2', '#4a90e2', '#7ed321'];
 
     function addChatMessage(name, msg, isSystem = false) {
