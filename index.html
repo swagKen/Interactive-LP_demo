@@ -12,7 +12,7 @@
             --live-red: #ff2d55;      /* 直播紅 */
             --text-white: #ffffff;
             --text-gray: #b9b9b9;
-            --diamond-green: #00d2be;  /* 鑽石綠 */
+            --diamond-gold: #00d2be;  /* 配合主色系的鑽石色 */
         }
 
         * {
@@ -99,36 +99,62 @@
             pointer-events: none;
         }
 
-        /* --- 2. 頂部介面區域 --- */
+        /* --- 2. 頂部介面區域 (Flexbox 佈局) --- */
         
-        /* 左上角：主播資訊 */
-        .streamer-info-container {
+        /* 頂部統一容器：確保左右平行且不重疊 */
+        .header-layer {
             position: absolute;
-            top: 20px; 
-            left: 10px;
-            z-index: 20;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 10px; /* 上方保留空間 */
             display: flex;
-            align-items: center;
+            justify-content: space-between;
+            align-items: center; /* 垂直置中對齊 */
+            z-index: 20;
+            pointer-events: none; /* 讓點擊穿透空白處 */
+            gap: 10px; /* 中間安全距離 */
         }
 
+        /* 左側：主播資訊 (彈性收縮) */
+        .header-left {
+            display: flex;
+            align-items: center;
+            pointer-events: auto;
+            flex: 1; /* 佔據剩餘空間 */
+            min-width: 0; /* 關鍵：允許 flex 子元素縮小到內容以下 (觸發文字省略) */
+        }
+
+        /* 右側：觀眾與關閉 (固定寬度，不收縮) */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+            flex-shrink: 0; /* 禁止被壓縮 */
+        }
+
+        /* 主播膠囊 */
         .streamer-pill {
             display: flex;
             align-items: center;
             background-color: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(5px);
-            padding: 4px 8px 4px 4px;
-            border-radius: 18px;
+            padding: 4px 8px 4px 4px; 
+            border-radius: 24px;
             cursor: pointer;
             border: 1px solid rgba(255,255,255,0.1);
+            max-width: 100%; /* 限制不超過父容器 */
         }
 
         .streamer-avatar {
-            width: 25px;
-            height: 25px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             overflow: hidden;
             margin-right: 8px;
             border: 2px solid var(--primary-color);
+            flex-shrink: 0;
         }
         .streamer-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -137,13 +163,18 @@
             flex-direction: column; 
             justify-content: center;
             margin-right: 10px; 
+            overflow: hidden; /* 超出隱藏 */
+            min-width: 40px; /* 最小寬度 */
         }
         .streamer-name { 
-            font-size: 10px; 
-            font-weight: 500; 
+            font-size: 13px; 
+            font-weight: 700; 
             color: #fff; 
             text-shadow: 0 1px 2px rgba(0,0,0,0.8);
             line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* 文字過長變... */
         }
         .streamer-diamonds {
             font-size: 10px;
@@ -152,20 +183,20 @@
             display: flex;
             align-items: center;
             gap: 2px;
+            white-space: nowrap;
         }
         
-        /* 追蹤按鈕 */
         .follow-btn {
             background-color: var(--primary-color);
             color: #000;
-            font-size: 10px;
-            font-weight: 500;
-            padding: 3px 10px;
-            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 5px 12px;
+            border-radius: 14px;
             border: none;
+            flex-shrink: 0;
         }
 
-        /* LIVE 標籤 */
         .live-badge {
             background: linear-gradient(45deg, #ff2d55, #ff5e3a);
             color: white;
@@ -176,24 +207,9 @@
             box-shadow: 0 2px 4px rgba(255, 45, 85, 0.4);
             animation: pulse 2s infinite;
             margin-left: 8px;
+            flex-shrink: 0;
         }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-
-        /* 右上角群組 */
-        .top-right-group {
-            position: absolute;
-            top: 30px; 
-            right: 15px;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
 
         /* 觀眾膠囊 */
         .viewer-pill {
@@ -207,7 +223,6 @@
             height: 36px;
         }
 
-        /* 字母頭像堆疊 */
         .viewer-avatars {
             display: flex;
             margin-right: 8px;
@@ -230,7 +245,7 @@
         }
         .letter-avatar:first-child { margin-left: 0; }
 
-        .viewer-num { font-size: 12px; font-weight: bold; color: #fff; }
+        .viewer-num { font-size: 12px; font-weight: bold; color: #fff; white-space: nowrap; }
 
         .close-btn {
             width: 36px;
@@ -248,7 +263,7 @@
             cursor: pointer;
         }
 
-        /* --- 4. 右側功能列 --- */
+        /* --- 4. 右側功能列 (無文字版) --- */
         .right-sidebar {
             position: absolute;
             right: 15px;
@@ -294,7 +309,7 @@
             filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5));
         }
 
-        /* --- 5. 聊天室 --- */
+        /* --- 5. 聊天室 (頭像版) --- */
         .chat-container {
             position: absolute;
             bottom: 20px; 
@@ -496,55 +511,37 @@
         </div>
     </div>
 
-    <!-- 2. 左上角：主播資訊 -->
-    <div class="streamer-info-container">
-        <div class="streamer-pill" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
-            <div class="streamer-avatar">
-                <img src="https://res.cloudinary.com/dlg6ct7jj/image/upload/v1764327454/picture_utcrso.jpg" alt="Avatar">
-            </div>
-            <div class="streamer-text">
-                <span class="streamer-name">kimmy_ilove</span>
-                <!-- 新增：主播鑽石數 (HTML ID) -->
-                <span class="streamer-diamonds">💎 <span id="streamerDiamondDisplay">56,383</span></span>
-            </div>
-            <button class="follow-btn">+ 追蹤</button>
-            <div class="live-badge">LIVE</div>
-        </div>
-    </div>
-
-    <!-- 3. 右上角：觀眾資訊 -->
-    <div class="top-right-group">
-        <div class="viewer-pill">
-            <div class="viewer-avatars">
-                <div class="letter-avatar" style="background:#ff2d55">K</div>
-                <div class="letter-avatar" style="background:#00d2be">J</div>
-                <div class="letter-avatar" style="background:#ffcc00">A</div>
-            </div>
-            <!-- 新增 ID 方便 JS 更新 -->
-            <span class="viewer-num" id="viewerCountDisplay">234</span>
-        </div>
-        <a href="https://swag.live" class="close-btn">✕</a>
-    </div>
-
-    <!-- 4. 底部控制面板 -->
-    <div class="control-panel">
-        <div class="balance-bar">
-            <div class="balance-title">互動指令</div>
-            <div class="balance-amount">
-                💎 <span id="diamondDisplay">800</span>
-                <div class="add-btn" onclick="openModal()">+</div>
+    <!-- 2. 頂部介面區域 (統一容器) -->
+    <div class="header-layer">
+        
+        <!-- 左側：主播資訊 -->
+        <div class="header-left">
+            <div class="streamer-pill" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
+                <div class="streamer-avatar">
+                    <img src="https://res.cloudinary.com/dlg6ct7jj/image/upload/v1764327454/picture_utcrso.jpg" alt="Avatar">
+                </div>
+                <div class="streamer-text">
+                    <span class="streamer-name">kimmy_ilove</span>
+                    <span class="streamer-diamonds">💎 <span id="streamerDiamondDisplay">56,388</span></span>
+                </div>
+                <button class="follow-btn">+ 追蹤</button>
+                <div class="live-badge">LIVE</div>
             </div>
         </div>
 
-        <div class="category-scroll">
-            <button class="cat-btn active" onclick="switchCategory('menu')">🕹️ 挑逗互動</button>
-            <button class="cat-btn" onclick="switchCategory('gift')">🎁 贈送禮物</button>
-            <button class="cat-btn" onclick="switchCategory('private')">🎭 私密表演</button>
+        <!-- 右側：觀眾與關閉 -->
+        <div class="header-right">
+            <div class="viewer-pill">
+                <div class="viewer-avatars">
+                    <div class="letter-avatar" style="background:#ff2d55">K</div>
+                    <div class="letter-avatar" style="background:#00d2be">J</div>
+                    <div class="letter-avatar" style="background:#ffcc00">A</div>
+                </div>
+                <span class="viewer-num" id="viewerCountDisplay">234</span>
+            </div>
+            <a href="https://swag.live" class="close-btn">✕</a>
         </div>
 
-        <div class="action-grid" id="actionContainer">
-            <!-- JS Render -->
-        </div>
     </div>
 
 </div>
@@ -566,8 +563,8 @@
     // ==========================================
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     let userDiamonds = 800;
-    let streamerDiamonds = 19999; 
-    let viewerCount = 12504; // 初始觀眾數
+    let streamerDiamonds = 56388; 
+    let viewerCount = 234; 
 
     const commandData = {
         "menu": [
@@ -601,7 +598,7 @@
     const actionContainer = document.getElementById('actionContainer');
     const diamondDisplay = document.getElementById('diamondDisplay');
     const streamerDiamondDisplay = document.getElementById('streamerDiamondDisplay'); 
-    const viewerCountDisplay = document.getElementById('viewerCountDisplay'); // 取得觀眾數元素
+    const viewerCountDisplay = document.getElementById('viewerCountDisplay'); 
     const rechargeModal = document.getElementById('rechargeModal');
     const chatContainer = document.getElementById('chatContainer');
     const soundBtn = document.getElementById('soundBtn');
@@ -619,8 +616,8 @@
         renderActions('menu');
         
         startFakeChat();
-        startViewerCountSimulation(); // 啟動觀眾模擬
-        startStreamerDiamondSimulation(); // 啟動鑽石模擬
+        startViewerCountSimulation(); 
+        startStreamerDiamondSimulation(); 
         
         soundBtn.addEventListener('click', toggleSound);
     }
@@ -652,12 +649,10 @@
         streamerDiamondDisplay.textContent = streamerDiamonds.toLocaleString();
     }
 
-    // --- 新增：觀眾人數模擬邏輯 ---
     function startViewerCountSimulation() {
         setInterval(() => {
-            // 隨機增加或減少 5-10 人
             const change = Math.floor(Math.random() * 6) + 5; 
-            const isGrowth = Math.random() > 0.5; // 50% 機率增減
+            const isGrowth = Math.random() > 0.5; 
             
             if (isGrowth) {
                 viewerCount += change;
@@ -665,12 +660,10 @@
                 viewerCount -= change;
             }
             
-            // 更新介面
             viewerCountDisplay.textContent = viewerCount.toLocaleString();
-        }, 2000); // 每 2 秒
+        }, 2000); 
     }
 
-    // --- 新增：主播鑽石模擬邏輯 ---
     function startStreamerDiamondSimulation() {
         setInterval(() => {
             const amounts = [100, 300, 500];
@@ -678,7 +671,7 @@
             
             streamerDiamonds += amount;
             updateStreamerBalanceUI();
-        }, 5000); // 每 5 秒
+        }, 5000); 
     }
 
     window.switchCategory = function(category) {
