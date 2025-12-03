@@ -576,8 +576,8 @@
         <div style="font-size:40px; margin-bottom:10px">💎</div>
         <div class="modal-title">鑽石不夠嗎？</div>
         <p class="modal-desc">趕快儲值鑽石<br> 我們繼續玩❤️！</p>
-        <a href="https://swag.live" class="modal-btn" target="_blank">💰 更多儲值優惠</a>
-        <button class="modal-close" onclick="closeModal()">我再想想</button>
+        <a href="https://swag.live" class="modal-btn" target="_blank">💰 查看儲值優惠</a>
+        <button class="modal-close" onclick="closeModal()">我再看看</button>
     </div>
 </div>
 
@@ -586,16 +586,16 @@
     //  JS 邏輯
     // ==========================================
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
-    let userDiamonds = 869;
+    let userDiamonds = 800;
     // 初始化數值修正
-    let streamerDiamonds = Math.floor(Math.random() * (30000 - 80000 + 1)) + 60000;
-    let viewerCount = Math.floor(Math.random() * (800 - 300 + 1)) + 555;
+    let streamerDiamonds = Math.floor(Math.random() * (80000 - 60000 + 1)) + 60000;
+    let viewerCount = Math.floor(Math.random() * (888 - 555 + 1)) + 555;
 
     const commandData = {
         "menu": [
             { name: "搖屁股", price: 300, video: "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326042/%E6%90%96%E5%B1%81%E8%82%A1_pruovu.mp4" },
             { name: "口交", price: 500, video: "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326006/%E5%90%83%E6%A3%92%E6%A3%92_v1hwyl.mp4" },
-            { name: "震動跳蛋", price: 899, video: "https://www.w3schools.com/html/mov_bbb.mp4" },
+            { name: "震動跳蛋", price: 800, video: "https://www.w3schools.com/html/mov_bbb.mp4" },
             { name: "噴水", price: 1000, video: "https://www.w3schools.com/html/movie.mp4" }
         ],
         "gift": [
@@ -614,9 +614,8 @@
         { name: "Ken", msg: "太辣了吧🔥" }, { name: "Elly", msg: "身材真好" },
         { name: "Suyu", msg: "可以看背面嗎？" }, { name: "Syuto", msg: "😍😍😍" },
         { name: "Henry", msg: "已斗內！" }, { name: "Teresa", msg: "主播晚上好" },
-        { name: "小明", msg: "這腿我可以" }, { name: "Shawn", msg: "Kimmy 超棒" }, 
+        { name: "小明", msg: "這腿我可以" }, { name: "Shawn", msg: "聲音好甜" }, 
         { name: "Matt", msg: "好色喔" }, { name: "Sam", msg: "聲音好甜" }
-        { name: "Semith", msg: "可以跟你約嗎" }, { name: "Alex", msg: "❤️有夠愛" }
     ];
 
     const mainVideo = document.getElementById('mainVideo');
