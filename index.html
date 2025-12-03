@@ -589,7 +589,7 @@
     let userDiamonds = 800;
     // 初始化數值修正
     let streamerDiamonds = 56388; 
-    let viewerCount = 234; 
+    let viewerCount = Math.floor(Math.random() * (888 - 555 + 1)) + 555;
 
     const commandData = {
         "menu": [
@@ -638,6 +638,9 @@
 
         updateBalanceUI();
         updateStreamerBalanceUI();
+        
+        document.getElementById('viewerCountDisplay').textContent = viewerCount.toLocaleString();
+        
         renderActions('menu');
         
         startFakeChat();
