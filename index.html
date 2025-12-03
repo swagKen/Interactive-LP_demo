@@ -750,7 +750,7 @@
         renderActions(currentCategory); 
         addChatMessage("系統", `您送出了 ${item.name}！主播 Kimmy 很開心 ❤️`, true);
 
-        if (item.video) {
+        if (currentCategory !== 'gift' && item.video) {
             playCommandVideo(item.video);
         } else if (item.link) {
             window.location.href = item.link;
