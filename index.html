@@ -770,9 +770,21 @@
         if(e.target === rechargeModal) closeModal();
     });
 
+    let messagePool = [...fakeMessages]; // 建立一個卡池
+    
     function startFakeChat() {
         setInterval(() => {
-            const randomData = fakeMessages[Math.floor(Math.random() * fakeMessages.length)];
+            // 如果卡池空了，重新填滿
+            if (messagePool.length === 0) {
+                messagePool = [...fakeMessages];
+            }
+
+            // 隨機選一個
+            const randomIndex = Math.floor(Math.random() * messagePool.length);
+            
+            // 取出並從池中移除
+            const randomData = messagePool.splice(randomIndex, 1)[0];
+
             addChatMessage(randomData.name, randomData.msg);
         }, 3000);
     }
