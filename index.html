@@ -588,7 +588,7 @@
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764326040/%E8%84%AB%E8%A1%A3_sprjda.mp4"; 
     let userDiamonds = 800;
     // 初始化數值修正
-    let streamerDiamonds = 56388; 
+    let streamerDiamonds = Math.floor(Math.random() * (80000 - 60000 + 1)) + 60000;
     let viewerCount = Math.floor(Math.random() * (888 - 555 + 1)) + 555;
 
     const commandData = {
