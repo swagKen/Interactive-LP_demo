@@ -770,12 +770,23 @@
         if(e.target === rechargeModal) closeModal();
     });
 
+    let messagePool = [...fakeMessages]; 
+
     function startFakeChat() {
         setInterval(() => {
-            const randomData = fakeMessages[Math.floor(Math.random() * fakeMessages.length)];
+            // 2. 如果池子空了，就重新填滿
+            if (messagePool.length === 0) {
+                messagePool = [...fakeMessages];
+            }
+
+            // 3. 從剩下的池子中隨機選一個索引
+            const randomIndex = Math.floor(Math.random() * messagePool.length);
+
+            // 4. 取出該留言，並從池子中移除 (splice 會回傳陣列，所以取 [0])
+            const randomData = messagePool.splice(randomIndex, 1)[0];
+
             addChatMessage(randomData.name, randomData.msg);
         }, 3000);
-    }
 
     const avatarColors = ['#ff2d55', '#00d2be', '#ffcc00', '#bd10e0', '#50e3c2', '#4a90e2', '#7ed321'];
 
