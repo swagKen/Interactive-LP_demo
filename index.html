@@ -525,7 +525,7 @@
 
     <!-- 2. 左上角：主播資訊 -->
     <div class="streamer-info-container">
-        <div class="streamer-pill" onclick="window.location.href='https://swag.live/user/6598ea338c318119164a5352'">
+        <div class="streamer-pill" onclick="navigateTo('https://swag.live/user/6598ea338c318119164a5352')">
             <div class="streamer-avatar">
                 <img src="https://res.cloudinary.com/dlg6ct7jj/image/upload/v1764327454/picture_utcrso.jpg" alt="Avatar">
             </div>
@@ -591,6 +591,29 @@
     // ==========================================
     //  JS 邏輯
     // ==========================================
+   // ==========================================
+    //  0. UTM 網址處理工具 (新增此段)
+    // ==========================================
+    function getUrlWithUTM(url) {
+        // 1. 取得當前頁面的參數 (例如 ?utm_source=fb)
+        const currentParams = window.location.search;
+        
+        // 2. 如果當前頁面沒有參數，直接回傳原網址
+        if (!currentParams) return url;
+
+        // 3. 判斷原網址是否已經有參數 (?)
+        // 如果有，用 '&' 連接；如果沒有，用 '?' 連接
+        const separator = url.includes('?') ? '&' : '?';
+        
+        // 4. 回傳組合後的網址 (移除 currentParams 第一個 ? 避免重複)
+        return url + separator + currentParams.substring(1);
+    }
+
+    // 通用跳轉函式 (給 HTML onclick 使用)
+    function navigateTo(url) {
+        window.location.href = getUrlWithUTM(url);
+    }
+
     const DEFAULT_VIDEO = "https://res.cloudinary.com/dlg6ct7jj/video/upload/v1764754725/Preroll_livestream_30s_kexpze.mp4";
     let userDiamonds = 899;
     // 初始化數值修正
@@ -656,6 +679,16 @@
         startStreamerDiamondSimulation(); 
         
         soundBtn.addEventListener('click', toggleSound);
+        
+        // --- 新增這段：自動將 UTM 參數加到所有 <a href> 連結上 ---
+        const allLinks = document.querySelectorAll('a[href]');
+        allLinks.forEach(link => {
+            const originalUrl = link.getAttribute('href');
+            // 排除 javascript:void(0) 或空連結
+            if (originalUrl && !originalUrl.startsWith('javascript') && !originalUrl.startsWith('#')) {
+                link.setAttribute('href', getUrlWithUTM(originalUrl));
+            }
+        });
     }
 
     function syncVideos() {
@@ -760,7 +793,7 @@
         if (currentCategory !== 'gift' && item.video) {
             playCommandVideo(item.video);
         } else if (item.link) {
-            window.location.href = item.link;
+            window.location.href = getUrlWithUTM(item.link);
         }
     }
 
